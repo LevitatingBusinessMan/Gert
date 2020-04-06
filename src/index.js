@@ -8,6 +8,9 @@ mode = "click",
 //If the server should actually power the GPIO pins
 dry = false,
 
+//For click mode, time to do action
+actionTime = 1000,
+
 express = require("express"),
 app = express(),
 http = require("http").createServer(app),
@@ -20,11 +23,17 @@ let state = "idle"
 //The time that the last input was send
 let lastInput = new Date()
 
+//Some logging
+console.log("Drymode:", dry)
+console.log("Control-mode:", mode)
+if (mode == "click")
+	console.log("Action-time:", actionTime)
+
 //GPIO stuff
 if (!dry) {
-	var L1 = new Gpio("5", "out")
-	var L2 = new Gpio("6", "out")
-	var R1 = new Gpio("13", "out")
+	var L1 = new Gpio("6", "out")
+	var L2 = new Gpio("13", "out")
+	var R1 = new Gpio("19", "out")
 	var R2 = new Gpio("26", "out")
 }
 
@@ -85,7 +94,7 @@ io.on("connection", socket => {
 //Reset movement after a second
 if (mode == "click") {
 	setInterval(() => {
-		if (new Date() - lastInput > 1000 && state != "idle") {
+		if (new Date() - lastInput > actionTime && state != "idle") {
 			console.log("Stopping")
 			state = "idle"
 
@@ -98,29 +107,29 @@ if (mode == "click") {
 }
 
 function forward() {
-	L1.writeSync(1)
-	L2.writeSync(0)
+	L1.writeSync(0)
+	L2.writeSync(1)
 	R1.writeSync(1)
 	R2.writeSync(0)
 }
 
 function left() {
-	L1.writeSync(1)
-	L2.writeSync(0)
+	L1.writeSync(0)
+	L2.writeSync(1)
 	R1.writeSync(0)
 	R2.writeSync(1)
 }
 
 function right() {
-	L1.writeSync(0)
-	L2.writeSync(1)
+	L1.writeSync(1)
+	L2.writeSync(0)
 	R1.writeSync(1)
 	R2.writeSync(0)
 }
 
 function back() {
-	L1.writeSync(0)
-	L2.writeSync(1)
+	L1.writeSync(1)
+	L2.writeSync(0)
 	R1.writeSync(0)
 	R2.writeSync(1)
 }
