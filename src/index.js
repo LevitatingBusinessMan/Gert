@@ -6,7 +6,7 @@ port = 3000,
 mode = "click",
 
 //If the server should actually power the GPIO pins
-dry = true,
+dry = false,
 
 express = require("express"),
 app = express(),
@@ -22,10 +22,10 @@ let lastInput = new Date()
 
 //GPIO stuff
 if (!dry) {
-	const L1 = new Gpio("5", "out")
-	const L2 = new Gpio("6", "out")
-	const R1 = new Gpio("13", "out")
-	const R2 = new Gpio("26", "out")
+	var L1 = new Gpio("5", "out")
+	var L2 = new Gpio("6", "out")
+	var R1 = new Gpio("13", "out")
+	var R2 = new Gpio("26", "out")
 }
 
 //setup view engine
@@ -98,31 +98,31 @@ if (mode == "click") {
 }
 
 function forward() {
-	L1.writeSync(0)
-	L2.writeSync(1)
-	R1.writeSync(0)
-	R2.writeSync(1)
+	L1.writeSync(1)
+	L2.writeSync(0)
+	R1.writeSync(1)
+	R2.writeSync(0)
 }
 
 function left() {
-	L1.writeSync(0)
-	L2.writeSync(1)
-	R1.writeSync(1)
-	R2.writeSync(0)
-}
-
-function right() {
 	L1.writeSync(1)
 	L2.writeSync(0)
 	R1.writeSync(0)
 	R2.writeSync(1)
 }
 
-function back() {
-	L1.writeSync(1)
-	L2.writeSync(0)
+function right() {
+	L1.writeSync(0)
+	L2.writeSync(1)
 	R1.writeSync(1)
 	R2.writeSync(0)
+}
+
+function back() {
+	L1.writeSync(0)
+	L2.writeSync(1)
+	R1.writeSync(0)
+	R2.writeSync(1)
 }
 
 function stop() {
