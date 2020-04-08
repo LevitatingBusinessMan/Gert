@@ -9,7 +9,7 @@ mode = "click",
 dry = false,
 
 //For click mode, time to do action
-actionTime = 1000,
+actionTime = 500,
 
 express = require("express"),
 app = express(),
